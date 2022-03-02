@@ -9,6 +9,10 @@ The main script file is *BashScript.sh*, which runs the other files in the repos
 * Updates
 * Networking configuration
 * Removing prohibited files/software
-* Managing services
 * Malware checks
 * Managing common services (SSH, FTP, Apache, NGINX, Samba)
+
+Currently working on:
+* More comprehensive firefox settings configuration
+* Better service configuration
+* More comprehensive security checks

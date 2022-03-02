@@ -1,0 +1,68 @@
+# This file contains the auditctl rules that are loaded
+# whenever the audit daemon is started via the initscripts.
+# The rules are simply the parameters that would be passed
+# to auditctl.
+
+# First rule - delete all
+-D
+
+# Increase the buffers to survive stress events.
+# Make this bigger for busy systems
+-b 320
+
+# Feel free to add below this line. See auditctl man page
+
+-a always,exit -F arch=b32 -S chmod -F auid>=1000 -F auid!=4294967295 -k perm_chng
+-a always,exit -F arch=b64 -S chmod -F auid>=1000 -F auid!=4294967295 -k perm_chng
+
+-a always,exit -F arch=b32 -S chown -F auid>=1000 -F auid!=-1 -k perm_chng
+-a always,exit -F arch=b64 -S chown -F auid>=1000 -F auid!=-1 -k perm_chng
+
+-w /var/log/btmp -p wa -k logins
+-w /bin/fdisk -p x -k fdisk
+-w /etc/group -p wa -k usergroup_modification
+-w /etc/shadow -p wa -k usergroup_modification
+-w /etc/gshadow -p wa -k usergroup_modification 
+-w /etc/passwd -p wa -k usergroup_modification
+-w /etc/security/opasswd -p wa -k usergroup_modification 
+-w /var/log/tallylog -p wa -k logins
+-w /var/log/sudo.log -p wa -k priv_actions
+-w /var/run/wtmp -p wa -k logins 
+-w /var/log/wtmp -p wa -k logins 
+-w /var/log/btmp -p wa -k logins 
+
+-a always,exit -F path=/bin/mount -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-mount
+-a always,exit -F path=/bin/umount -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-umount
+
+-a always,exit -F path=/usr/lib/openssh/ssh-keysign -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-ssh
+
+-a always,exit -F path=/bin/su -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-priv_change
+-a always,exit -F path=/usr/bin/passwd -F perm=x -F auid>=500 -F auid!=4294967295 -k privileged-passwd
+-a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>=1000 -F auid!=-1 -k privileged-usermod
+
+-a always,exit -F arch=b64 -S rename -Fauid>=1000 -F auid!=4294967295 -k delete
+-a always,exit -F arch=b32 -S rename -F auid>=1000 -F auid!=4294967295 -k delete
+-a always,exit -F arch=b64 -S renameat -Fauid>=1000 -F auid!=4294967295 -k delete
+-a always,exit -F arch=b32 -S renameat -F auid>=1000 -F auid!=4294967295 -k delete 
+
+-a always,exit -F path=/usr/bin/crontab -F perm=x -F auid>=1000 -F auid!=4294967295 -k privileged-crontab
+
+
+-a always,exit -F arch=b32 -S init_module -F auid>=1000 -F auid!=4294967295 -k module_chng
+-a always,exit -F arch=b64 -S init_module -F auid>=1000 -F auid!=4294967295 -k module_chng
+
+-a always,exit -F arch=b32 -S delete_module -F key=modules
+-a always,exit -F arch=b64 -S delete_module -F key=modules 
+
+-a always,exit -F arch=b64 -S unlink -Fauid>=1000 -F auid!=4294967295 -k delete
+-a always,exit -F arch=b32 -S unlink -F auid>=1000 -F auid!=4294967295 -k delete 
+-a always,exit -F arch=b64 -S unlinkat -Fauid>=1000 -F auid!=4294967295 -k delete
+-a always,exit -F arch=b32 -S unlinkat -F auid>=1000 -F auid!=4294967295 -k delete 
+
+
+-a always,exit -F arch=b64 -S execve -C uid!=euid -F euid=0 -F key=execpriv
+-a always,exit -F arch=b64 -S execve -C gid!=egid -F egid=0 -F key=execpriv
+-a always,exit -F arch=b32 -S execve -C uid!=euid -F euid=0 -F key=execpriv
+-a always,exit -F arch=b32 -S execve -C gid!=egid -F egid=0 -F key=execpriv 
+
+-w /var/log/sudo.log -p wa -k maintenance 

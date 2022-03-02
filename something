@@ -1,0 +1,5 @@
+# PermitRootLogin no
+PermitRootLogin no
+PermitEmptyPasswords no
+Protocol 2
+PermitUserEnvironment no
